@@ -1,0 +1,64 @@
+name: CI/CD - Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build app
+        run: npm run build
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
+      - name: List SSH directory
+        run: ls -l ~/.ssh
+
+      - name: Deploy to Prod Server
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          touch ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa 
+          ssh-keyscan -p ${{ secrets.HOSTING_SSH_PORT }} "${{ secrets.HOSTING_URL }}" >> ~/.ssh/known_hosts
+          rsync -avz --delete -e "ssh -p ${{ secrets.HOSTING_SSH_PORT }}" dist/ ${{ secrets.HOSTING_SSH_USER }}:${{ secrets.DEPLOY_PATH }}
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: Generate unique tag based on date and time
+        id: tag
+        run: |
+          new_tag=$(date +"%Y%m%d-%H%M")
+          echo "New tag: $new_tag"
+          echo "TAG=$new_tag" >> $GITHUB_ENV
+  
+      - name: Create and push new tag
+        uses: softprops/action-gh-release@v1
+        with:
+            tag_name: ${{ env.TAG }}
+            release_name: false
+            draft: false
+            prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.CICD_DEV_TOKEN }}
+  
