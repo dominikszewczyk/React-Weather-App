@@ -1,0 +1,54 @@
+name: CI/CD - Development
+
+on:
+  push:
+    branches:
+      - feature/**
+      - bugfix/**
+      - hotfix/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get branch name
+        id: get_branch
+        run: |
+          branch_name=$(echo "${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
+          echo "branch_name=$branch_name" >> $GITHUB_ENV
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build app
+        run: BRANCH_NAME=$branch_name npm run build
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
+      - name: List SSH directory
+        run: ls -l ~/.ssh
+
+      - name: Deploy to Dev Server
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          touch ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa 
+          ssh-keyscan -p ${{ secrets.HOSTING_SSH_PORT }} "${{ secrets.HOSTING_URL }}" >> ~/.ssh/known_hosts
+          rsync -avz --delete -e "ssh -p ${{ secrets.HOSTING_SSH_PORT }}" dist/ ${{ secrets.HOSTING_SSH_USER }}:${{ secrets.DEPLOY_PATH }}-dev/${{ env.branch_name }}
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
