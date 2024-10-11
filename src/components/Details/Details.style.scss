@@ -1,0 +1,16 @@
+.weather__details {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    &-item {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .weather__details {
+        grid-template-columns: 1fr 1fr;
+    }
+}
