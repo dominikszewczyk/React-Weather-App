@@ -1,4 +1,8 @@
-@media (max-width: 768px) {
+@use '../../styles/colors.scss';
+@use '../../styles/sizes.scss';
+@use '../../styles/fonts.scss';
+
+@media (max-width: sizes.$screen-md) {
     .weather__forecast {
         width: 100%;
     }

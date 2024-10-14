@@ -1,28 +1,31 @@
-$width: 1024px;
+@use '../../styles/colors.scss';
+@use '../../styles/sizes.scss';
+@use '../../styles/fonts.scss';
 
 .weather {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 20px;
+  gap: sizes.$gap-large;
   width: 100%;
-  max-width: $width;
+  max-width: sizes.$screen-xl;
+  margin: sizes.$margin-large;
   align-content: baseline;
 }
 
 .weather__main {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: sizes.$gap-large;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: sizes.$screen-xl) {
   .weather {
-    padding: 10px;
+    padding: sizes.$padding-small;
     grid-template-columns: 2fr 2fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: sizes.$screen-md) {
   .weather {
     grid-template-columns: 1fr;
   }

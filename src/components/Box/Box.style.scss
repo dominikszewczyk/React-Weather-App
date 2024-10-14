@@ -1,7 +1,9 @@
-$background-color-light: #f0f0f0;
+@use '../../styles/colors.scss';
+@use '../../styles/sizes.scss';
+@use '../../styles/fonts.scss';
 
 .weather__box {
-    background-color: $background-color-light;
-    padding: 15px;
-    border-radius: 15px;
+    background-color: colors.$background-box-color-light;
+    padding: sizes.$padding-medium;
+    border-radius: sizes.$border-radius-medium;
 }
