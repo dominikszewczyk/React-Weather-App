@@ -7,11 +7,18 @@
   grid-template-columns: 2fr 1fr;
   gap: sizes.$gap-large;
   width: 100%;
+  padding: sizes.$padding-large;
   max-width: sizes.$screen-xl;
-  margin: sizes.$margin-large;
   align-content: baseline;
 }
-
+.dark.weather {
+  color: colors.$text-color-dark;
+  background-color: colors.$background-color-dark;
+}
+.light.weather {
+  color: colors.$text-color-light;
+  background-color: colors.$background-color-light;
+}
 .weather__main {
   display: flex;
   flex-direction: column;
