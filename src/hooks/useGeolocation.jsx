@@ -6,7 +6,7 @@ export default function useGeolocation() {
   const [location, setLocation] = useState({latitude: null, longitude: null});
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const requestGeolocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -34,13 +34,17 @@ export default function useGeolocation() {
               setLocation(defaultLocation);
               break;
           }
-          }
-        );
-      } else {
-        setError("Geolocation is not supported by this browser.");
-        setLocation(defaultLocation);
+        }
+      );
+    } else {
+      setError("Geolocation is not supported by this browser.");
+      setLocation(defaultLocation);
     }
-  }, []);
+  }
 
-  return [location, error];
+  useEffect(() => {
+    requestGeolocation();
+  }, [location]);
+
+  return [location, error, requestGeolocation];
 }

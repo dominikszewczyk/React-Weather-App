@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+
+import useFetchData from '../../hooks/useFetchData'
 
 import Box from '../Box/Box'
 import ImageIcon from '../ImageIcon/ImageIcon'
@@ -15,8 +18,20 @@ import iconGeolocationLight from '../../assets/icon-geolocation-dark.png'
 import iconGeolocationDark from '../../assets/icon-geolocation-light.png'
 
 
-export default function Navbar({ onThemeToggle, currentTheme}) {
-
+export default function Navbar({ onThemeToggle, currentTheme, location, requestGeolocation}) {
+    const [locationName, setLocationName] = useState({country: '', city: ''});
+    
+    const locationURL = `https://nominatim.openstreetmap.org/reverse?lat=${location.latitude}&lon=${location.longitude}&format=json`;
+    const [locationData, errorLocationData, isLoadingLocationData ] = useFetchData(locationURL);
+    
+    useEffect(() => {
+        if (locationData && !isLoadingLocationData && !errorLocationData) {
+            setLocationName({
+                country: locationData.address?.country, 
+                city: locationData.address?.village || locationData.address?.city
+            });
+        }
+    }, [locationData, isLoadingLocationData, errorLocationData]);
 
     return (
         <Box className="navbar">
@@ -29,9 +44,13 @@ export default function Navbar({ onThemeToggle, currentTheme}) {
                     src={{"dark": iconLocationDark, "light": iconLocationLight}} 
                     alt="Icon Location Dark" 
                     theme={currentTheme}
-                    />
-                <b>Polska</b>, Przebieczany
-                </div>
+                />
+                {locationName.country && locationName.city && (
+                    <>
+                        <b>{locationName?.country}</b>, {locationName?.city}
+                    </>
+                )}
+            </div>
             <div className="navbar__search">
                 <input type="text" className="search__input input" placeholder="Search Location"></input>
                 <ImageIcon 
@@ -53,7 +72,7 @@ export default function Navbar({ onThemeToggle, currentTheme}) {
                         {currentTheme} Mode
                     </button>
                 </div>
-                <div className="navbar__settings">
+                <div className="navbar__settings" onClick={requestGeolocation}>
                     <ImageIcon 
                         className="settings__icon icon icon--hover" 
                         src={{"dark": iconSettingDark, "light": iconSettingLight}} 
@@ -68,5 +87,10 @@ export default function Navbar({ onThemeToggle, currentTheme}) {
 
 Navbar.propTypes = {
     onThemeToggle: PropTypes.func.isRequired,
-    currentTheme: PropTypes.string.isRequired
+    currentTheme: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+        latitude: PropTypes.number,
+        longitude: PropTypes.number
+    }),
+    requestGeolocation: PropTypes.func.isRequired
 }; 

@@ -12,7 +12,7 @@ import useThemeDetector from '../../hooks/useThemeDetector'
 import './Weather.style.scss'
 
 export default function Weather() {
-    const [location, errorGeolocation] = useGeolocation();
+    const [location, errorGeolocation, requestGeolocation] = useGeolocation();
     const [theme, toggleTheme] = useThemeDetector(null);
 
     return (
@@ -27,6 +27,7 @@ export default function Weather() {
                     onThemeToggle={toggleTheme} 
                     currentTheme={theme}
                     location={location}
+                    requestGeolocation={requestGeolocation}
                 />
 
                 <div className="weather__main">

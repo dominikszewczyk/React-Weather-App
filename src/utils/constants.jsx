@@ -2,6 +2,6 @@ export const lightThemeName = "light";
 export const darkThemeName = "dark";
 
 export const defaultLocation = {
-    latitude: 51.919438,
-    longitude: 19.145136
+    latitude: 52.237049,
+    longitude: 21.017532
 }
