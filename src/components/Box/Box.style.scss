@@ -1,0 +1,15 @@
+@use '../../styles/colors.scss';
+@use '../../styles/sizes.scss';
+@use '../../styles/fonts.scss';
+
+.weather__box {
+    background-color: colors.$background-box-color-light;
+    padding: sizes.$padding-medium;
+    border-radius: sizes.$border-radius-medium;
+}
+.dark .weather__box {
+    background-color: colors.$background-box-color-dark;
+}
+.light .weather__box {
+    background-color: colors.$background-box-color-light;
+}

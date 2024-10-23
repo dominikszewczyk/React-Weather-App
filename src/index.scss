@@ -1,0 +1,24 @@
+@use './styles/colors.scss';
+@use './styles/sizes.scss';
+@use './styles/fonts.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: fonts.$font-family-base;
+    font-size: fonts.$font-size-base;
+    font-weight: fonts.$font-weight-base;
+    line-height: fonts.$line-height-base;
+    background-color: colors.$background-color-light;
+}
+
+#root {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

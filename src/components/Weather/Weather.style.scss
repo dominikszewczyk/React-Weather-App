@@ -1,0 +1,42 @@
+@use '../../styles/colors.scss';
+@use '../../styles/sizes.scss';
+@use '../../styles/fonts.scss';
+
+.weather {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: sizes.$gap-large;
+  width: 100%;
+  padding: sizes.$padding-large;
+  max-width: sizes.$screen-xl;
+  align-content: baseline;
+}
+.dark.weather {
+  color: colors.$text-color-dark;
+  background-color: colors.$background-color-dark;
+}
+.light.weather {
+  color: colors.$text-color-light;
+  background-color: colors.$background-color-light;
+}
+.weather__main {
+  display: flex;
+  flex-direction: column;
+  gap: sizes.$gap-large;
+}
+
+@media (max-width: sizes.$screen-xl) {
+  .weather {
+    padding: sizes.$padding-small;
+    grid-template-columns: 2fr 2fr;
+  }
+}
+
+@media (max-width: sizes.$screen-md) {
+  .weather {
+    grid-template-columns: 1fr;
+  }
+  .weather__main {
+    width: 100%;
+  }
+}
