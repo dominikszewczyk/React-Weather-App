@@ -66,7 +66,11 @@
             border-color: colors.$text-supporting-color-blue;
         }
     }
-    .navbar__theme {
+    &__controls {
+        display: flex;
+        justify-content: space-between;
+    }
+    &__theme {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -74,7 +78,7 @@
             font-size: 0.8rem;
         }
     }
-    .navbar__settings {
+    &__settings {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -94,24 +98,6 @@
         }
     }
 }
-.button {
-    display: flex;
-    align-items: center;
-    padding: 6px 16px;
-    border-radius: sizes.$border-radius-small;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
-    &:hover {
-        opacity: 0.9;
-    }
-    &__icon {
-        width: 16px;
-        height: 16px;
-        margin: 4px;
-    }
-}
 .dark {
     .button {
         background-color: colors.$button-background-color-dark;
@@ -124,17 +110,23 @@
         color: colors.$button-text-color-light;
     }
 }
-.input {
-    border-width: 0;
-    background-color: transparent;
-    color: colors.$text-color-dark;
+.button {
+    display: flex;
+    align-items: center;
+    padding: 6px 16px;
+    border-radius: sizes.$border-radius-small;
+    border: none;
+    cursor: pointer;
     font-size: 0.9rem;
-    height: 100%;
-    padding: 10px 16px;
-    outline: none;
-    &::placeholder {
-        color: colors.$text-color-dark;
+    transition: background-color 0.3s;
+    text-transform: capitalize;
+    &:hover {
         opacity: 0.9;
+    }
+    &__icon {
+        width: 16px;
+        height: 16px;
+        margin: 4px;
     }
 }
 .dark {
@@ -150,6 +142,34 @@
         color: colors.$text-color-light;
         &::placeholder {
             color: colors.$text-color-light;
+        }
+    }
+}
+.input {
+    border-width: 0;
+    background-color: transparent;
+    color: colors.$text-color-dark;
+    font-size: 0.9rem;
+    height: 100%;
+    padding: 10px 16px;
+    outline: none;
+    &::placeholder {
+        color: colors.$text-color-dark;
+        opacity: 0.9;
+    }
+}
+
+@media (max-width: sizes.$screen-md) {
+    .navbar {
+        flex-direction: column;
+        > div {
+            margin: 5px 0;
+        }
+        &__controls {
+            justify-content: space-around;
+        }
+        &__place {
+            justify-content: center;
         }
     }
 }

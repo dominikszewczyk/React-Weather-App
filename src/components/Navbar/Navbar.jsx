@@ -1,18 +1,22 @@
+import PropTypes from 'prop-types'
+
 import Box from '../Box/Box'
+import ImageIcon from '../ImageIcon/ImageIcon'
 
 import './Navbar.style.scss'
 
-import iconLocationDark from '../../assets/icon-location-dark.png'
-// import iconLocationLight from '../../assets/icon-location-light.png'
+import iconLocationLight from '../../assets/icon-location-dark.png'
+import iconLocationDark from '../../assets/icon-location-light.png'
 import iconThemeSun from '../../assets/icon-theme-sun-light.png'
-// import iconThemeMoon from '../../assets/icon-theme-moon-dark.png'
-import iconSettingDark from '../../assets/icon-settings-dark.png'
-// import iconSettingLight from '../../assets/icon-settings-light.png'
-import iconGeolocationDark from '../../assets/icon-geolocation-dark.png'
-// import iconGeolocationLight from '../../assets/icon-geolocation-light.png'
+import iconThemeMoon from '../../assets/icon-theme-moon-dark.png'
+import iconSettingLight from '../../assets/icon-settings-dark.png'
+import iconSettingDark from '../../assets/icon-settings-light.png'
+import iconGeolocationLight from '../../assets/icon-geolocation-dark.png'
+import iconGeolocationDark from '../../assets/icon-geolocation-light.png'
 
 
-export default function Navbar() {
+export default function Navbar({ onThemeToggle, currentTheme}) {
+
 
     return (
         <Box className="navbar">
@@ -20,22 +24,49 @@ export default function Navbar() {
                 <p>WeatherApp</p>
             </div>
             <div className="navbar__place">
-                <img className="place__icon icon" src={iconLocationDark} alt="Icon Location Dark" /> 
+                <ImageIcon 
+                    className="place__icon icon" 
+                    src={{"dark": iconLocationDark, "light": iconLocationLight}} 
+                    alt="Icon Location Dark" 
+                    theme={currentTheme}
+                    />
                 <b>Polska</b>, Przebieczany
                 </div>
             <div className="navbar__search">
                 <input type="text" className="search__input input" placeholder="Search Location"></input>
-                <img className="search__icon icon icon--hover" src={iconGeolocationDark} alt="Icon Geolocation" />
+                <ImageIcon 
+                    className="search__icon icon icon--hover" 
+                    src={{"dark": iconGeolocationDark, "light": iconGeolocationLight}} 
+                    alt="Icon Geolocation"
+                    theme={currentTheme}
+                    />
             </div>
-            <div className="navbar__theme">
-                <button className="theme__button button">
-                    <img className="button__icon icon" src={iconThemeSun} alt="Icon Theme" />
-                    Light Mode
-                </button>
-            </div>
-            <div className="navbar__settings">
-                <img className="settings__icon icon icon--hover" src={iconSettingDark} alt="Icon Settings" />
+            <div className="navbar__controls">
+                <div className="navbar__theme">
+                    <button className="theme__button button" onClick={onThemeToggle}>
+                        <ImageIcon 
+                            className="button__icon icon" 
+                            src={{dark: iconThemeMoon, light: iconThemeSun}} 
+                            alt="Icon Theme" 
+                            theme={currentTheme}
+                            />
+                        {currentTheme} Mode
+                    </button>
+                </div>
+                <div className="navbar__settings">
+                    <ImageIcon 
+                        className="settings__icon icon icon--hover" 
+                        src={{"dark": iconSettingDark, "light": iconSettingLight}} 
+                        alt="Icon Settings" 
+                        theme={currentTheme}
+                    />
+                </div>
             </div>
         </Box>
     )
 }
+
+Navbar.propTypes = {
+    onThemeToggle: PropTypes.func.isRequired,
+    currentTheme: PropTypes.string.isRequired
+}; 
