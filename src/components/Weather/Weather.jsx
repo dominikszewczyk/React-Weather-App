@@ -4,6 +4,8 @@ import Details from '../Details/Details'
 import Summary from '../Summary/Summary'
 import Forecast from '../Forecast/Forecast'
 
+import { useState } from 'react'
+
 import useGeolocation from '../../hooks/useGeolocation'
 import useThemeDetector from '../../hooks/useThemeDetector'
 // import useBrowserLanguage from '../../hooks/useBrowserLanguage'
@@ -14,6 +16,8 @@ import './Weather.style.scss'
 export default function Weather() {
     const [location, errorGeolocation, requestGeolocation] = useGeolocation();
     const [theme, toggleTheme] = useThemeDetector(null);
+
+    const [currentWeatherData, setCurrentWeatherData] = useState()
 
     return (
         <>  
@@ -28,10 +32,11 @@ export default function Weather() {
                     currentTheme={theme}
                     location={location}
                     requestGeolocation={requestGeolocation}
+                    setCurrentWeatherData={setCurrentWeatherData}
                 />
 
                 <div className="weather__main">
-                    <Current />
+                    <Current currentWeatherData={currentWeatherData}/>
                     <Details />
                     <Summary />
                 </div>

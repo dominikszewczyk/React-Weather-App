@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
+import { convertKelvinToCelsius } from '../../utils/convertTemperatures'
+
 import useFetchData from '../../hooks/useFetchData'
 
 import Box from '../Box/Box'
@@ -17,8 +19,9 @@ import iconSettingDark from '../../assets/icon-settings-light.png'
 import iconGeolocationLight from '../../assets/icon-geolocation-dark.png'
 import iconGeolocationDark from '../../assets/icon-geolocation-light.png'
 
+import currentWeatherDataAPI from '/public/data.json'
 
-export default function Navbar({ onThemeToggle, currentTheme, location, requestGeolocation}) {
+export default function Navbar({ onThemeToggle, currentTheme, location, requestGeolocation, setCurrentWeatherData}) {
     const [locationName, setLocationName] = useState({country: '', city: ''});
     
     const locationURL = `https://nominatim.openstreetmap.org/reverse?lat=${location.latitude}&lon=${location.longitude}&format=json`;
@@ -32,6 +35,31 @@ export default function Navbar({ onThemeToggle, currentTheme, location, requestG
             });
         }
     }, [locationData, isLoadingLocationData, errorLocationData]);
+    
+    useEffect(() => {
+        // const weatherDataURL = `${import.meta.env.VITE_OPEN_WEATHER_BASE_URL}/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`;
+        // console.log(weatherDataURL);
+        
+        const convertedData = {
+            ...currentWeatherDataAPI,
+            dt: new Date(currentWeatherDataAPI.dt * 1000),
+            sys: {
+                ...currentWeatherDataAPI.sys,
+                sunrise: new Date(currentWeatherDataAPI.sys.sunrise * 1000),
+                sunset: new Date(currentWeatherDataAPI.sys.sunset * 1000),
+            },
+            main: {
+                ...currentWeatherDataAPI.main,
+                temp: convertKelvinToCelsius(currentWeatherDataAPI.main.temp),
+                feels_like: convertKelvinToCelsius(currentWeatherDataAPI.main.feels_like, 1),
+                temp_min: convertKelvinToCelsius(currentWeatherDataAPI.main.temp_min, 1),
+                temp_max: convertKelvinToCelsius(currentWeatherDataAPI.main.temp_max, 1),
+
+            }
+        }
+
+        setCurrentWeatherData(convertedData);
+    }, [setCurrentWeatherData]);
 
     return (
         <Box className="navbar">
@@ -92,5 +120,6 @@ Navbar.propTypes = {
         latitude: PropTypes.number,
         longitude: PropTypes.number
     }),
-    requestGeolocation: PropTypes.func.isRequired
+    requestGeolocation: PropTypes.func.isRequired,
+    setCurrentWeatherData: PropTypes.func.isRequired
 }; 
